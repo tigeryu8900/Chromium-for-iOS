@@ -3,6 +3,7 @@ name: Build
 on:
   push:
     branches: [ main ]
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.ref }}
@@ -10,7 +11,7 @@ concurrency:
 
 jobs:
   build:
-    runs-on: macos-11
+    runs-on: macos-latest
     steps:
       - name: Clone depot_tools
         run: |
@@ -25,18 +26,18 @@ jobs:
           cd chromium
           fetch --no-history ios
           rm -rf .gclient
-          wget https://gist.github.com/growtopiajaw/9a218e197be196b6f6adffc3c68344b6/raw/c5d729d58f1b731de3f14b7a1e88f537c6151c43/.gclient
+          wget https://gist.github.com/growtopiajaw/9a218e197be196b6f6adffc3c68344b6/raw/.gclient
 
       - name: Download Chromium for iOS build configurations
         run: |
           export PATH="$(pwd)/depot_tools:$PATH"
           cd chromium/src
           rm -rf .vpython .vpython3
-          wget https://gist.github.com/growtopiajaw/9a218e197be196b6f6adffc3c68344b6/raw/255db913278c20e3a142b7e3295588bed7db7bc3/.vpython
-          wget https://gist.github.com/growtopiajaw/9a218e197be196b6f6adffc3c68344b6/raw/255db913278c20e3a142b7e3295588bed7db7bc3/.vpython3
+          wget https://gist.github.com/growtopiajaw/9a218e197be196b6f6adffc3c68344b6/raw/.vpython
+          wget https://gist.github.com/growtopiajaw/9a218e197be196b6f6adffc3c68344b6/raw/.vpython3
           pushd ios/build
           rm -rf chrome_build.gni
-          wget https://gist.github.com/growtopiajaw/9a218e197be196b6f6adffc3c68344b6/raw/c5d729d58f1b731de3f14b7a1e88f537c6151c43/chrome_build.gni
+          wget https://gist.github.com/growtopiajaw/9a218e197be196b6f6adffc3c68344b6/raw/chrome_build.gni
           popd
 
       - name: Generate build directories
@@ -51,7 +52,7 @@ jobs:
           mkdir -p out/Release-iphoneos
           pushd out/Release-iphoneos
           rm -rf args.gn || true
-          wget https://gist.github.com/growtopiajaw/9a218e197be196b6f6adffc3c68344b6/raw/20aaee68f7d8a4a6fda18301f33c5c974c92e5c7/args.gn
+          wget https://gist.github.com/growtopiajaw/9a218e197be196b6f6adffc3c68344b6/raw/args.gn
           gsed "s/API_KEY/$API_KEY/g" -i args.gn
           gsed "s/CLIENT_ID/$CLIENT_ID/g" -i args.gn
           gsed "s/CLIENT_SECRET/$CLIENT_SECRET/g" -i args.gn
@@ -71,14 +72,13 @@ jobs:
           mkdir Payload
           mv Chromium.app Payload/
           7z a -tzip -mx=9 Chromium.ipa Payload
-          cp Chromium.ipa ~/
-          cp Chromium.ipa ~/chromium/src/
+          mv Chromium.ipa ${{ github.workspace }}/Chromium.ipa
           popd
 
-      - name: Upload release
-        uses: svenstaro/upload-release-action@2.2.1
+      - name: Upload Artifact
+        if: ${{ inputs.upload_artifact }}
+        uses: actions/upload-artifact@v4.3.4
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: Chromium.ipa
-          tag: v2.0
-          file_glob: true
+          name: Chromium.ipa
+          path: ${{ github.workspace }}/Chromium.ipa
+          if-no-files-found: error
