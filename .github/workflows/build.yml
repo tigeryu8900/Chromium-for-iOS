@@ -25,12 +25,11 @@ jobs:
           mkdir chromium
           cd chromium
           fetch --no-history ios
-
-      - name: Download Chromium for iOS build configurations
-        run: |
-          export PATH="$(pwd)/depot_tools:$PATH"
-          cd chromium/src
-          pushd ios/build
+          rm -rf .gclient
+          wget https://raw.githubusercontent.com/tigeryu8900/Chromium-for-iOS/main/.gclient
+          pushd ~
+          rm -rf .setup-gn
+          wget https://raw.githubusercontent.com/tigeryu8900/Chromium-for-iOS/main/.setup-gn
           popd
 
       - name: Generate build directories
@@ -69,7 +68,6 @@ jobs:
           popd
 
       - name: Upload Artifact
-        if: ${{ inputs.upload_artifact }}
         uses: actions/upload-artifact@v4.3.4
         with:
           name: Chromium.ipa
