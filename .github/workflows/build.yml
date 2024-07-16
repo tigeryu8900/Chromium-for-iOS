@@ -25,19 +25,12 @@ jobs:
           mkdir chromium
           cd chromium
           fetch --no-history ios
-          rm -rf .gclient
-          wget https://gist.github.com/growtopiajaw/9a218e197be196b6f6adffc3c68344b6/raw/.gclient
 
       - name: Download Chromium for iOS build configurations
         run: |
           export PATH="$(pwd)/depot_tools:$PATH"
           cd chromium/src
-          rm -rf .vpython .vpython3
-          wget https://gist.github.com/growtopiajaw/9a218e197be196b6f6adffc3c68344b6/raw/.vpython
-          wget https://gist.github.com/growtopiajaw/9a218e197be196b6f6adffc3c68344b6/raw/.vpython3
           pushd ios/build
-          rm -rf chrome_build.gni
-          wget https://gist.github.com/growtopiajaw/9a218e197be196b6f6adffc3c68344b6/raw/chrome_build.gni
           popd
 
       - name: Generate build directories
@@ -52,7 +45,7 @@ jobs:
           mkdir -p out/Release-iphoneos
           pushd out/Release-iphoneos
           rm -rf args.gn || true
-          wget https://gist.github.com/growtopiajaw/9a218e197be196b6f6adffc3c68344b6/raw/args.gn
+          wget https://raw.githubusercontent.com/tigeryu8900/Chromium-for-iOS/main/args.gn
           gsed "s/API_KEY/$API_KEY/g" -i args.gn
           gsed "s/CLIENT_ID/$CLIENT_ID/g" -i args.gn
           gsed "s/CLIENT_SECRET/$CLIENT_SECRET/g" -i args.gn
