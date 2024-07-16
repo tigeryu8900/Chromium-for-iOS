@@ -1,0 +1,16 @@
+target_os = "ios"
+is_debug = false
+enable_dsyms = false
+enable_stripping = false
+is_official_build = false
+is_chrome_branded = false
+target_cpu = "arm64"
+target_environment = "device"
+ios_set_attributes_for_xcode_project_generation = false
+target_os = "ios"
+enable_remoting = false
+google_api_key = "API_KEY"
+google_default_client_id = "CLIENT_ID"
+google_default_client_secret = "CLIENT_SECRET"
+ios_enable_background_mode = true
+ios_enable_code_signing = false
