@@ -13,4 +13,5 @@ google_api_key = "API_KEY"
 google_default_client_id = "CLIENT_ID"
 google_default_client_secret = "CLIENT_SECRET"
 ios_enable_background_mode = true
-ios_enable_code_signing = false
+ios_enable_code_signing = true
+ios_code_signing_identity = "1D0C921426842080C633B2762E0436FB7E39C8AF"
