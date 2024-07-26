@@ -19,3 +19,4 @@ solutions = [
 ]
 target_os = ["ios"]
 target_os_only = True
+use_blink = True
