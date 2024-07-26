@@ -16,3 +16,4 @@ ios_enable_background_mode = true
 ios_enable_code_signing = true
 ios_code_signing_identity = ""
 ios_code_signing_identity_description = "iPhone Developer"
+use_blink = true
